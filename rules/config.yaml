@@ -1,0 +1,244 @@
+run:
+  backend:
+    type: Literal
+    opts: [pyomo, gurobi]
+    doc: Points to the solver interface that will be used on running the model
+  backend_options:
+    ...THIS_IS_WHERE_YOU_MERGE_IN_BACKEND_OPTION_RULES...
+    validator: backend_validation
+    solver:
+      type: Literal
+      opts: [cbc, glpk, gurobi, cplex]
+      doc: "Choice of solver to run from the backend"
+    solver_io:
+      type: str
+      doc: |
+        What method the Pyomo backend should use to communicate with
+        the solver
+    solver_options:
+      type: Dict
+      doc: |
+        Optional configuration for the solvers, using python interface
+        notation for the specific solver
+
+
+  bigM:
+    type: PositiveFloat
+    default: !!float 1e9
+    doc: |
+      Used for unmet demand, but should be of a similar order of
+      magnitude as the largest cost that the model could achieve. Too
+      high and the model will not converge
+  cyclic_storage:
+    type: bool
+    default: true
+    doc: |
+      If true, storage in the last timestep of the timeseries is
+      considered to be the 'previous timestep' in the first timestep
+      of the timeseries
+  mode:
+    type: Literal
+    opts: [plan, operate]
+    default: plan
+    doc: |
+      The optimisation mode to use. `plan` optimises investment and
+      timeseries decision variables. `operate` fixes investment
+      decisions according to user inputs and optimises timeseries
+      decision variables using a rolling horizon method
+  objective_options:
+    validator: objective_options_validation
+    cost_class:
+      type: CostClassDict  # TODO: decide on whether to enforce this type check now or to check back with this dictionary only once the data has been loaded (in which case the type would be a Dict)
+      doc: |
+        Objective function weights applied to costs in each cost class
+    sense:
+      type: Literal
+      opts: [minimize, maximize]
+      doc: |
+        Set whether to `minimize` or `maximize` the objective function
+    objective:
+      type: Literal
+      opts: [minmax_cost_optimization]
+      doc: |
+        Name of internal objective function to use, currently only
+        min/max cost-based optimisation is available, which uses the
+        objective options `sense` and `cost_class`
+  operate_options:
+    horizon:
+      type: str  # pandas.Timedelta
+      doc: |
+        The time horizon of the rolling horizon optimisation, which
+        must be less than or equal to the time window
+    window:
+      validator: range_check  # window >= horizon, i.e. the same as [min, max]
+      type: str  # pandas.Timedelta
+      doc: "The time window for the rolling horizon optimisation"
+    use_cap_results:
+      type: bool
+      doc: |
+        If true, and loading data from a calliope model saved as
+        netCDF, use the results of running the model in `plan` mode to
+        set the investment decisions in `operate` mode
+    save_logs:
+      type: Path
+      doc: |
+        Path to directory in which log files will be saved. If given
+        as a relative path, it will be relative to the directory of
+        the model configuration. Setting this option also turns on
+        symbolic solver labels in the Pyomo backend, for easier
+        debugging of the logs
+  postprocess_options:
+    zero_threshold:
+      type: PositiveFloat
+      default: !!float 1e-10
+      doc: |
+        Any value coming out of the backend that is smaller than this
+        threshold (due to floating point errors, probably) will be set
+        to zero
+    compute_metrics:  # TODO: what to call these? metrics? indicators? stats?
+      type: bool
+      default: true
+      doc: |
+        If true, technology capacity factors and levelised costs of
+        energy will be computed using the results of the optimisation
+model:
+  calliope_version:
+    type: str
+    validator: calliope_version_validation
+  name:
+    type: str
+  random_seed:
+    type: int
+  reserve_margin:
+    type: Dict  # TODO: move this out
+    doc: |
+      Per-carrier system-wide reserve margins, defined as key:value
+      pairs of carrier:reserve margin
+  subset_time:
+    type: List
+    validator: range_check
+    doc: |
+      Only run the optimisation over a subset of the input timeseries,
+      given as (first timestep, last timestep). Timesteps are
+      inclusive and can be any valid datetime stamp (e.g. '2020',
+      '2020-01', '2020-01-01', and '2020-01-01 00:00' are all valid
+      datetime stamps)
+  # time_aggregation:
+  #   validator: time_aggregation_validation
+  #   masks: # TODO: list of dictionaries, a list (of abritrary length) of dictionaries which can't be validated
+  #     - validator: mask_validation
+  #       function:
+  #         type: Literal
+  #         opts: [extreme, extreme_diff]
+  #       options:
+  #         var:
+  #           type: str
+  #           validator: mask_options_var_validation
+  #           doc: |
+  #             Constraint parameter from which timeseries data is
+  #             acquired, e.g. `resource`
+  #         length:
+  #           type: str  # pandas.Timedelta
+  #           doc: "Length of time to mask"
+  #         n:
+  #           type: int
+  #           doc: |
+  #             Number of masks to define TODO: check this is actually the
+  #             case
+  #         padding:
+  #           type: str  # Union[Literal, pandas.Timedelta]
+  #           opts: ['calendar_week']
+  #           doc: "Padding either side of the mask"
+  #         tech:
+  #           type: str
+  #           validator: mask_options_tech_validation
+  #           doc: "tech to select data for from 'var'"
+  #         tech0:
+  #           type: str
+  #           validator: mask_options_tech_validation
+  #           doc: "First tech to select data for from 'var'"
+  #         tech1:
+  #           type: str
+  #           validator: mask_options_tech_validation
+  #           doc: "Second tech to select data for from 'var'"
+  #         how:
+  #           type: Literal
+  #           opts: [min, max]
+  #           doc: |
+  #             Whether to select day masks based on smallest (min)
+  #             value/difference or largest (max) value/difference
+  #         normalize:
+  #           type: bool
+  #           default: true
+  #           doc: |
+  #             Whether or not to normalise the data in 'var' before
+  #             attempting masking
+  #     - function:
+  #         type: Literal
+  #         opts: [apply_clustering, resample]
+  #         doc: |
+  #           Function to apply following any masking. TODO: allow this to
+  #           also allow custom functions, not just the above, inbuilt
+  #           options
+  #       function_options:
+  #         validator: function_option_validation
+  #         clustering_func:
+  #           type: Union[Literal, FileWithSubset]
+  #           opts: ['kmeans', 'hierarchical']
+  #           doc: |
+  #             Method to use for clustering. Can be an algorithm or point
+  #             to a file explicitly providing the cluster number for each
+  #             timestep
+  #         how:
+  #           type: Literal
+  #           opts: [closest, mean]
+  #           doc: |
+  #             Having conducted clustering, how to generate the
+  #             timeseries which is representative of each cluster; either
+  #             'mean' (average of all days in a cluster) or 'closest'
+  #             (day with timeseries closest to the cluster centroid)
+  #         k:
+  #           type: int
+  #           doc: |
+  #             Number of clusters at which to stop kmeans clustering. If
+  #             not given, number of clusters is decided using Hartigan's
+  #             rule
+  #         resolution:
+  #           type: str  # pandas.Timedelta
+  #           doc: "Resolution to which data should be resampled"
+  timeseries_data_path:
+    type: DirectoryPath
+    doc: |
+      Directory in which timeseries data is stored, relative to model
+      configuration file. Whenever you point to a timeseries file in
+      the remainder of the model configuration, it will be relative to
+      this path
+  timeseries_data:  # TODO: get rid of this, as it is exposing implementation to the user
+    type: Dict
+    validator: timeseries_data_validation
+    doc: |
+      Dictionary of string:pandas.DataFrame pairs defining the
+      tineseries data used in the model. This is usually populated by
+      Calliope, using all instances of `file=` in the model
+      configuration.
+  timeseries_dateformat:
+    type: str
+    validator: timeseries_dateformat_validation
+    doc: |
+      datetime format describing the format in which timesteps are
+      stored in timeseries files
+
+techs:
+  type: FilePath
+  doc: Path to techs data configuration
+nodes:
+  type: FilePath
+  doc: Path to nodes data configuration
+links:
+  type: FilePath
+  doc: Path to links data configuration
+  default: OptionalMissingValue
+scenarios:
+  type: FilePath
+  doc: Path to scenarios data configuration
+  default: OptionalMissingValue
