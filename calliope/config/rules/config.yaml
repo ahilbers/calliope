@@ -4,14 +4,14 @@ run:
     opts: [pyomo, gurobi]
     doc: Points to the solver interface that will be used on running the model
   backend_options:
-    ...THIS_IS_WHERE_YOU_MERGE_IN_BACKEND_OPTION_RULES...
-    validator: backend_validation
+    # TODO: THIS IS WHERE YOU MERGE IN BACKEND OPTION RULES
+    #validator: backend_validation
     solver:
       type: Literal
       opts: [cbc, glpk, gurobi, cplex]
       doc: "Choice of solver to run from the backend"
     solver_io:
-      type: str
+      type: Text
       doc: |
         What method the Pyomo backend should use to communicate with
         the solver
@@ -48,7 +48,7 @@ run:
   objective_options:
     validator: objective_options_validation
     cost_class:
-      type: CostClassDict  # TODO: decide on whether to enforce this type check now or to check back with this dictionary only once the data has been loaded (in which case the type would be a Dict)
+      type: Dict #CostClassDict  # TODO: decide on whether to enforce this type check now or to check back with this dictionary only once the data has been loaded (in which case the type would be a Dict)
       doc: |
         Objective function weights applied to costs in each cost class
     sense:
@@ -65,13 +65,13 @@ run:
         objective options `sense` and `cost_class`
   operate_options:
     horizon:
-      type: str  # pandas.Timedelta
+      type: Text  # pandas.Timedelta
       doc: |
         The time horizon of the rolling horizon optimisation, which
         must be less than or equal to the time window
     window:
       validator: range_check  # window >= horizon, i.e. the same as [min, max]
-      type: str  # pandas.Timedelta
+      type: Text  # pandas.Timedelta
       doc: "The time window for the rolling horizon optimisation"
     use_cap_results:
       type: bool
@@ -103,10 +103,10 @@ run:
         energy will be computed using the results of the optimisation
 model:
   calliope_version:
-    type: str
+    type: Text
     validator: calliope_version_validation
   name:
-    type: str
+    type: Text
   random_seed:
     type: int
   reserve_margin:
@@ -132,13 +132,13 @@ model:
   #         opts: [extreme, extreme_diff]
   #       options:
   #         var:
-  #           type: str
+  #           type: Text
   #           validator: mask_options_var_validation
   #           doc: |
   #             Constraint parameter from which timeseries data is
   #             acquired, e.g. `resource`
   #         length:
-  #           type: str  # pandas.Timedelta
+  #           type: Text  # pandas.Timedelta
   #           doc: "Length of time to mask"
   #         n:
   #           type: int
@@ -146,19 +146,19 @@ model:
   #             Number of masks to define TODO: check this is actually the
   #             case
   #         padding:
-  #           type: str  # Union[Literal, pandas.Timedelta]
+  #           type: Text  # Union[Literal, pandas.Timedelta]
   #           opts: ['calendar_week']
   #           doc: "Padding either side of the mask"
   #         tech:
-  #           type: str
+  #           type: Text
   #           validator: mask_options_tech_validation
   #           doc: "tech to select data for from 'var'"
   #         tech0:
-  #           type: str
+  #           type: Text
   #           validator: mask_options_tech_validation
   #           doc: "First tech to select data for from 'var'"
   #         tech1:
-  #           type: str
+  #           type: Text
   #           validator: mask_options_tech_validation
   #           doc: "Second tech to select data for from 'var'"
   #         how:
@@ -204,7 +204,7 @@ model:
   #             not given, number of clusters is decided using Hartigan's
   #             rule
   #         resolution:
-  #           type: str  # pandas.Timedelta
+  #           type: Text  # pandas.Timedelta
   #           doc: "Resolution to which data should be resampled"
   timeseries_data_path:
     type: DirectoryPath
@@ -213,16 +213,16 @@ model:
       configuration file. Whenever you point to a timeseries file in
       the remainder of the model configuration, it will be relative to
       this path
-  timeseries_data:  # TODO: get rid of this, as it is exposing implementation to the user
-    type: Dict
-    validator: timeseries_data_validation
-    doc: |
-      Dictionary of string:pandas.DataFrame pairs defining the
-      tineseries data used in the model. This is usually populated by
-      Calliope, using all instances of `file=` in the model
-      configuration.
+#   timeseries_data:  # TODO: get rid of this, as it is exposing implementation to the user
+#     type: Dict
+#     validator: timeseries_data_validation
+#     doc: |
+#       Dictionary of string:pandas.DataFrame pairs defining the
+#       tineseries data used in the model. This is usually populated by
+#       Calliope, using all instances of `file=` in the model
+#       configuration.
   timeseries_dateformat:
-    type: str
+    type: Text
     validator: timeseries_dateformat_validation
     doc: |
       datetime format describing the format in which timesteps are
