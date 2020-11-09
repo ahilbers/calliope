@@ -1,0 +1,92 @@
+energy_cap:
+  type: unitfloat
+  opts: {unit: power}
+  name: Energy Cap
+  doc: "Technology capacity which limits the carrier production in each timestep"
+carrier_prod:
+  type: unitfloat
+  opts: {unit: energy}
+  name: Carrier production
+  doc: "Energy carrier produced by a technology in each timestep."
+carrier_con:
+  type: unitfloat
+  opts: {unit: energy}
+  name: Carrier consumption
+  doc: "Energy carrier consumed by a technology in each timestep."
+cost:
+  type: CostClassDict
+  name: Cost
+  doc: "Total cost, both investment and operation, per technology"
+resource_area:
+  type: unitfloat
+  opts: {unit: area}
+  name: Resource area
+  doc: "Total area dedicated to providing resources to a technology"
+resource_con:
+  type: unitfloat
+  opts: {unit: energy}
+  name: Resource consumption
+  doc: "Resource consumed by a supply_plus technology"
+resource_cap:
+  type: unitfloat
+  opts: {unit: power}
+  name: Resource capacity
+  doc: "Capacity on resource consumption, valid for supply_plus technologies"
+carrier_export:
+  type: unitfloat
+  opts: {unit: energy}
+  name: Carrier export
+  doc: "Energy carrier exported from the system"
+storage_cap:
+  type: unitfloat
+  opts: {unit: energy}
+  name: Storage capacity
+  doc: "Capacity on energy that can be stored in a storage device, valid for 
+  storage and supply_plus technologies"
+storage:
+  type: unitfloat
+  opts: {unit: energy}
+  name: Storage
+  doc: "Energy stored in a storage device in a given timestep"
+cost_var:
+  type: CostClassDict
+  name: Variable costs
+  doc: "Total cost associated with timeseries variables (e.g. `carrier_prod`)
+  for each technology"
+cost_investment:
+  type: CostClassDict
+  name: Investment cost
+  doc: "Total cost associated with investment variables (e.g. `energy_cap`)
+  for each technology"
+purchased:
+  type: bool
+  name: Purchased
+  doc: "For technologies defining a `purchase` cost, boolean indicator of 
+  whether a technology was invested in or not"
+units:
+  type: int
+  name: Units
+  doc: "For technologies defining `unit...` constraints, how many units of each 
+  technology have been invested in"
+operating_units:
+  type: int
+  name: Operating units
+  doc: "For technologies defining `unit...` constraints, how many invested units 
+  of each technology are being operated in each timestep"
+unmet_demand:
+  type: unitfloat
+  opts: {unit: energy}
+  name: Unmet demand
+  doc: "If `run.ensure_feasibility` is True, unmet demand will provide additional,
+  virtual carrier production to ensure that system energy balance is 
+  maintained. Any unmet demand in the results suggests constraint violation
+  that needs to be addressed by the user."
+unused_supply:
+  type: unitfloat
+  opts: {unit: energy}
+  name: Unused supply
+  doc: "If `run.ensure_feasibility` is True, unused supply will provide a virtual
+  sink for energy overproduction, to ensure that system energy balance is 
+  maintained. This variable is combined with `unmet_demand` in the results
+  array as negative values."
+      

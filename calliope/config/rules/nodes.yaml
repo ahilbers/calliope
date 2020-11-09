@@ -1,0 +1,32 @@
+validator: node_validation
+exists:
+  type: bool
+  default: True
+  doc: "If True, the node exists, if False, it does not. 
+  Allows overrides to remove nodes, for example, on a per-scenario basis."
+coordinates:
+  validator: node_coordinate_validation
+  x:
+    type: float
+  y:
+    type: float
+  lat:
+    type: confloat
+    opts: {ge: -90, le: 90}
+  lon:
+    type: confloat
+    opts: {ge: -180, le: 180}
+# The contents of this would then need validating using the techs.yaml
+# Since all data under 'constraints' and 'costs' and 'exists' for a tech can 
+# be set here on a per-node basis
+techs:  
+  type: Dict
+transmission_node: 
+  type: bool
+  doc: "true only if no techs are defined (including complete ommission of the 
+  `techs` key). Automatically added during processing if not defined by user."
+available_area:  # TODO: decide if worth removing in favour of group constraints
+  type: float
+  doc: "This node's available land area, used to constrain technology deployment 
+  for those technologies with resource availability dependent on area."
+

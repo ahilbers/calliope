@@ -29,3 +29,12 @@ dist/
 doc/_build/
 doc/_static/notebooks/*.html
 .ipynb_checkpoints
+dist/
+.cache
+.pytest_cache/
+mprofile_*
+profile_*
+*.profile
+_test
+.vscode
+.mypy_cache/

@@ -1,0 +1,294 @@
+locs:
+  type: list
+  validator: group_locs_validation # TODO: there needs to be a check here which allows user-defined nodes and techs only
+  default: OptionalMissingValue  # FIXME - no default, but optional - use a sentinel object here?
+techs:
+  type: list
+  validator: group_techs_validation # TODO: there needs to be a check here which allows user-defined nodes and techs only
+  default: OptionalMissingValue  # FIXME - no default, but optional - use a sentinel object here?
+exists:
+  type: bool
+  default: True
+  doc: "True, the group contraint exists, if False, it does not. 
+  Allows overrides to remove group constraints, for example, on a per-scenario basis."
+demand_share_min:
+  type: CarrierClassDict  # FIXME custom type to implement: Dict[str, carrierfloat]
+  opts: {ge: 0, le: 1}
+  default: 0
+  doc: "Enforces the minimum share of demand that must be met by carrier production 
+  of groups of supply and/or conversion technologies at a subset of nodes, 
+  on average over the entire model timeseries. The share is relative to demand 
+  technologies only."
+  allowed_in: [supply, supply_plus, conversion, conversion_plus]
+demand_share_max:
+  type: CarrierClassDict  # FIXME custom type to implement: Dict[str, carrierfloat]
+  opts: {ge: 0, le: 1}
+  default: 1
+  doc: "Enforces the maximum share of demand that can be met by carrier production 
+  of groups of supply and/or conversion technologies at a subset of nodes, 
+  on average over the entire model timeseries. The share is relative to demand 
+  technologies only."
+  allowed_in: [supply, supply_plus, conversion, conversion_plus]
+demand_share_equals:
+  type: CarrierClassDict  # FIXME custom type to implement: Dict[str, carrierfloat]
+  opts: {ge: 0, le: 1}
+  default: OptionalMissingValue  # FIXME - no default, but optional - use a sentinel object here?
+  doc: "Enforces the exact share of demand that must be met by carrier production 
+  of groups of supply and/or conversion technologies at a subset of nodes, 
+  on average over the entire model timeseries. The share is relative to demand 
+  technologies only."
+  allowed_in: [supply, supply_plus, conversion, conversion_plus]
+demand_share_per_timestep_min:
+  type: CarrierClassDict  # FIXME custom type to implement: Dict[str, carrierfloat]
+  opts: {ge: 0, le: 1}
+  default: 0
+  doc: "Enforces the minimum share of demand that must be met by carrier production 
+  of groups of supply and/or conversion technologies at a subset of nodes, 
+  in each timestep of the timeseries. The share is relative to demand only."
+  allowed_in: [supply, supply_plus, conversion, conversion_plus]
+demand_share_per_timestep_max:
+  type: CarrierClassDict  # FIXME custom type to implement: Dict[str, carrierfloat]
+  opts: {ge: 0, le: 1}
+  default: 1
+  doc: "Enforces the maximum share of demand that can be met by carrier production 
+  of groups of supply and/or conversion technologies at a subset of nodes, 
+  in each timestep of the timeseries. The share is relative to demand only."
+  allowed_in: [supply, supply_plus, conversion, conversion_plus]
+demand_share_per_timestep_equals:
+  type: CarrierClassDict  # FIXME custom type to implement: Dict[str, carrierfloat]
+  opts: {ge: 0, le: 1}
+  default: OptionalMissingValue  # FIXME - no default, but optional - use a sentinel object here?
+  doc: "Enforces the exact share of demand that must be met by carrier production 
+  of groups of supply and/or conversion technologies at a subset of nodes, 
+  in each timestep of the timeseries. The share is relative to demand only."
+  allowed_in: [supply, supply_plus, conversion, conversion_plus]
+demand_share_per_timestep_decision:
+  type: CarrierClassDict  # FIXME custom type to implement: Dict[str, carrierfloat]
+  opts: {ge: 0, le: 1}
+  default: OptionalMissingValue  # FIXME - no default, but optional - use a sentinel object here?
+  doc: "Enforces the exact share of demand that must be met by carrier production 
+  of groups of supply and/or conversion technologies at a subset of nodes, 
+  in each timestep of the timeseries. The share is relative to demand only.
+  Individual contributions from each tech at each node is determined during 
+  optimisation, and subsequently fixed to the same share in each timestep"
+  allowed_in: [supply, supply_plus, conversion, conversion_plus]
+carrier_prod_share_min:
+  type: CarrierClassDict  # FIXME custom type to implement: Dict[str, carrierfloat]
+  opts: {ge: 0, le: 1}
+  default: 0
+  doc: "Enforces the minimum share of carrier production that must be met by carrier
+  production of a subset of supply and/or conversion technologies for groups 
+  of nodes, on average over the entire model timeseries. 
+  The share is relative to supply and conversion technologies only."
+  allowed_in: [supply, supply_plus, conversion, conversion_plus]
+carrier_prod_share_max:
+  type: CarrierClassDict  # FIXME custom type to implement: Dict[str, carrierfloat]
+  opts: {ge: 0, le: 1}
+  default: 1
+  doc: "Enforces the maximum share of carrier production that can be met by carrier
+  production of a subset of supply and/or conversion technologies for groups 
+  of nodes, on average over the entire model timeseries. 
+  The share is relative to supply and conversion technologies only."
+  allowed_in: [supply, supply_plus, conversion, conversion_plus]
+carrier_prod_share_equals:
+  type: CarrierClassDict  # FIXME custom type to implement: Dict[str, carrierfloat]
+  opts: {ge: 0, le: 1}
+  default: OptionalMissingValue  # FIXME - no default, but optional - use a sentinel object here?
+  doc: "Enforces the exact share of carrier production that must be met by carrier
+  production of a subset of supply and/or conversion technologies for groups 
+  of nodes, on average over the entire model timeseries. 
+  The share is relative to supply and conversion technologies only."
+  allowed_in: [supply, supply_plus, conversion, conversion_plus]
+carrier_prod_share_per_timestep_min:
+  type: CarrierClassDict  # FIXME custom type to implement: Dict[str, carrierfloat]
+  opts: {ge: 0, le: 1}
+  default: 0
+  doc: "Enforces the minimum share of carrier production that must be met by carrier
+  production of a subset of supply and/or conversion technologies for groups 
+  of nodes, in each timestep of the model timeseries. 
+  The share is relative to supply and conversion technologies only."
+  allowed_in: [supply, supply_plus, conversion, conversion_plus]
+carrier_prod_share_per_timestep_max:
+  type: CarrierClassDict  # FIXME custom type to implement: Dict[str, carrierfloat]
+  opts: {ge: 0, le: 1}
+  default: 1
+  doc: "Enforces the maximum share of carrier production that can be met by carrier
+  production of a subset of supply and/or conversion technologies for groups 
+  of nodes, in each timestep of the model timeseries. 
+  The share is relative to supply and conversion technologies only."
+  allowed_in: [supply, supply_plus, conversion, conversion_plus]
+carrier_prod_share_per_timestep_equals:
+  type: CarrierClassDict  # FIXME custom type to implement: Dict[str, carrierfloat]
+  opts: {ge: 0, le: 1}
+  default: OptionalMissingValue  # FIXME - no default, but optional - use a sentinel object here?
+  doc: "Enforces the exact share of carrier production that must be met by carrier
+  production of a subset of supply and/or conversion technologies for groups 
+  of nodes, in each timestep of the model timeseries. 
+  The share is relative to supply and conversion technologies only."
+  allowed_in: [supply, supply_plus, conversion, conversion_plus]
+net_import_share_min:
+  type: CarrierClassDict  # FIXME custom type to implement: Dict[str, carrierfloat]
+  opts: {ge: 0, le: 1}
+  default: 0
+  doc: "Enforces the minimum share of demand that must be met by net imports from 
+  transmission technologies at a subset of nodes, on average over the 
+  entire model timeseries. Transmission within the group are ignored. 
+  The share is relative to demand technologies only."
+  allowed_in: [transmission]
+net_import_share_max:
+  type: CarrierClassDict  # FIXME custom type to implement: Dict[str, carrierfloat]
+  opts: {ge: 0, le: 1}
+  default: 1
+  doc: "Enforces the maximum share of demand that can be met by net imports from 
+  transmission technologies at a subset of nodes, on average over the 
+  entire model timeseries. Transmission within the group are ignored. 
+  The share is relative to demand technologies only."
+  allowed_in: [transmission]
+net_import_share_equals:
+  type: CarrierClassDict  # FIXME custom type to implement: Dict[str, carrierfloat]
+  opts: {ge: 0, le: 1}
+  default: OptionalMissingValue  # FIXME - no default, but optional - use a sentinel object here?
+  doc: "Enforces the exact share of demand that must be met by net imports from 
+  transmission technologies at a subset of nodes, on average over the 
+  entire model timeseries. Transmission within the group are ignored. 
+  The share is relative to demand technologies only."
+  allowed_in: [transmission]
+carrier_prod_min:
+  type: CarrierClassDict  # FIXME custom type to implement: Dict[str, carrierfloat]
+  opts: {ge: 0, lt: .inf}
+  default: 0
+  doc: "Enforces the minimum carrier production that must be provided by a subset of 
+  supply and/or conversion technologies at a subset of nodes, 
+  on average over the entire model timeseries."
+  allowed_in: [supply, supply_plus, conversion, conversion_plus]
+carrier_prod_max:
+  type: CarrierClassDict  # FIXME custom type to implement: Dict[str, carrierfloat]
+  opts: {ge: 0, le: .inf}
+  default: .inf
+  doc: "Enforces the maximum carrier production that can be provided by a subset of 
+  supply and/or conversion technologies at a subset of nodes, 
+  on average over the entire model timeseries."
+  allowed_in: [supply, supply_plus, conversion, conversion_plus]
+carrier_prod_equals:
+  type: CarrierClassDict  # FIXME custom type to implement: Dict[str, carrierfloat]
+  opts: {ge: 0, lt: .inf}
+  default: OptionalMissingValue  # FIXME - no default, but optional - use a sentinel object here?
+  doc: "Enforces the exact carrier production that must be provided by a subset of 
+  supply and/or conversion technologies at a subset of nodes, 
+  on average over the entire model timeseries."
+  allowed_in: [supply, supply_plus, conversion, conversion_plus]
+cost_min:
+  type: CostClassDict  # FIXME custom type to implement: Dict[str, costfloat]
+  default: -.inf
+  doc: "Enforces the minimum cost that must be incurred by a subset of technologies
+  by a subset of technologies at a subset of nodes, in total over the entire 
+  model timeseries."
+cost_max:
+  type: CostClassDict  # FIXME custom type to implement: Dict[str, costfloat]
+  default: .inf
+  doc: "Enforces the maximum cost that can be incurred by a subset of technologies
+  by a subset of technologies at a subset of nodes, in total over the entire 
+  model timeseries."
+cost_equals:
+  type: CostClassDict  # FIXME custom type to implement: Dict[str, costfloat]
+  default: OptionalMissingValue  # FIXME - no default, but optional - use a sentinel object here?
+  doc: "Enforces the exact cost that must be incurred by a subset of technologies
+  by a subset of technologies at a subset of nodes, in total over the entire 
+  model timeseries."
+cost_var_min:
+  type: CostClassDict  # FIXME custom type to implement: Dict[str, costfloat]
+  default: -.inf
+  doc: "Enforces the minimum operational costs that must be incurred by a subset of 
+  technologies by a subset of technologies at a subset of nodes, in total over 
+  the entire model timeseries."
+cost_var_max:
+  type: CostClassDict  # FIXME custom type to implement: Dict[str, costfloat]
+  default: .inf
+  doc: "Enforces the maximum operational costs that can be incurred by a subset of 
+  technologies by a subset of technologies at a subset of nodes, in total over 
+  the entire model timeseries."
+cost_var_equals:
+  type: CostClassDict  # FIXME custom type to implement: Dict[str, costfloat]
+  default: OptionalMissingValue  # FIXME - no default, but optional - use a sentinel object here?
+  doc: "Enforces the exact operational costs that must be incurred by a subset of 
+  technologies by a subset of technologies at a subset of nodes, in total over 
+  the entire model timeseries."
+cost_investment_min:
+  type: CostClassDict  # FIXME custom type to implement: Dict[str, costfloat]
+  default: -.inf
+  doc: "Enforces the minimum investment cost that must be incurred by a subset of 
+  technologies by a subset of technologies at a subset of nodes, in total over 
+  the entire model timeseries."
+cost_investment_max:
+  type: CostClassDict  # FIXME custom type to implement: Dict[str, costfloat]
+  default: .inf
+  doc: "Enforces the maximum investment cost that can be incurred by a subset of 
+  technologies by a subset of technologies at a subset of nodes, in total over 
+  the entire model timeseries."
+cost_investment_equals:
+  type: CostClassDict  # FIXME custom type to implement: Dict[str, costfloat]
+  default: OptionalMissingValue  # FIXME - no default, but optional - use a sentinel object here?
+  doc: "Enforces the exact investment cost that must be incurred by a subset of 
+  technologies by a subset of technologies at a subset of nodes, in total over 
+  the entire model timeseries."
+energy_cap_share_min:
+  type: confloat
+  opts: {ge: 0, le: 1}
+  default: 0
+  doc: "Enforces the minimum share of energy capacity that must be met by capacity 
+  of groups of supply and/or converstion technologies at a subset of nodes.
+  The share is relative to supply and conversion technologies only."
+  allowed_in: [supply, supply_plus, conversion, conversion_plus, storage]
+energy_cap_share_max: 
+  type: confloat
+  opts: {ge: 0, le: 1}
+  default: 1
+  doc: "Enforces the maximum share of demand that can be met by capacity 
+  of groups of supply and/or converstion technologies at a subset of nodes.
+  The share is relative to supply and conversion technologies only."
+  allowed_in: [supply, supply_plus, conversion, conversion_plus, storage]
+energy_cap_share_equals:
+  type: confloat
+  opts: {ge: 0, le: 1}
+  default: OptionalMissingValue  # FIXME - no default, but optional - use a sentinel object here?
+  doc: "Enforces the exact share of demand that must be met by capacity 
+  of groups of supply and/or converstion technologies at a subset of nodes.
+  The share is relative to supply and conversion technologies only."
+  allowed_in: [supply, supply_plus, conversion, conversion_plus, storage]
+energy_cap_min:
+  type: unitfloat
+  opts: {ge: 0, lt: .inf, unit: power}
+  default: 0
+  doc: "Enforces the minimum energy capacity of groups of technologies at a subset of nodes."
+energy_cap_max:
+  type: unitfloat
+  opts: {ge: 0, le: .inf, unit: power}
+  default: .inf
+  doc: "Enforces the maximum energy capacity of groups of technologies at a subset of nodes."
+energy_cap_equals:
+  type: unitfloat
+  opts: {ge: 0, lt: .inf, unit: power}
+  default: OptionalMissingValue  # FIXME - no default, but optional - use a sentinel object here?
+  doc: "Enforces the exact energy capacity of groups of technologies at a subset of nodes."
+resource_area_min: 
+  type: unitfloat
+  opts: {ge: 0, lt: .inf, unit: area}
+  default: 0
+  doc: "Enforces the minimum area dedicated to resource production for groups of 
+  technologies at a subset of nodes."
+  allowed_in: [supply, supply_plus, demand]
+resource_area_max: 
+  type: unitfloat
+  opts: {ge: 0, le: .inf, unit: area}
+  default: .inf
+  doc: "Enforces the maximum area dedicated to resource production for groups of 
+  technologies at a subset of nodes."
+  allowed_in: [supply, supply_plus, demand]
+resource_area_equals: 
+  type: unitfloat
+  opts: {ge: 0, lt: .inf, unit: area}
+  default: OptionalMissingValue  # FIXME - no default, but optional - use a sentinel object here?
+  doc: "Enforces the exact area dedicated to resource production for groups of 
+  technologies at a subset of nodes."
+  allowed_in: [supply, supply_plus, demand]
+
